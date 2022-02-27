@@ -19,15 +19,23 @@ import java.util.List;
  * deleteAddressBookData:-take id of an contact and delete that record from the database.
  */
 public interface IAddressBookService {
-    List<AddressBookData> getAddressBookData();
 
-    AddressBookData getAddressBookDataById(int Id);
+    //save data to repository
+    String createAddressBookData(AddressBookDTO addressBookDTO);
 
-    AddressBookData createAddressBookData(AddressBookDTO addressBookDTO);
-
-    AddressBookData updateAddressBookData(int empId, AddressBookDTO addressBookDTO);
-
-    void deleteAddressBookData(int empId);
+    //get All Data from token
+    List<AddressBookData> getAddressBookDataByToken(String token);
 
 
+    //get records created for particular id by generating token for that id
+    AddressBookData getRecordByToken(String token);
+
+
+    //update records by providing token generated for particular id
+    AddressBookData updateRecordByToken(String token, AddressBookDTO addressBookDTO);
+
+
+
+    //deleted records by token
+    AddressBookData deleteRecordByToken(String token);
 }

@@ -20,7 +20,7 @@ public @Data class AddressBookData {
     private long phoneNumber;
     private String city;
     private String state;
-    private long zip;
+    private int zip;
 
     public AddressBookData(AddressBookDTO addressBookDTO) {
         this.updateAddressBook(addressBookDTO);
@@ -29,13 +29,24 @@ public @Data class AddressBookData {
     public AddressBookData() {
     }
 
+    public AddressBookData(Integer id, AddressBookDTO addressBookDTO) {
+        this.id=id;
+        this.firstName = addressBookDTO.getFirstName();
+        this.lastName = addressBookDTO.getLastName();
+        this.email = addressBookDTO.getEmail();
+        this.phoneNumber = addressBookDTO.getPhoneNumber();
+        this.city = addressBookDTO.getCity();
+        this.state = addressBookDTO.getCity();
+        this.zip = addressBookDTO.getZip();
+    }
+
     public void updateAddressBook(AddressBookDTO addressBookDTO){
-        this.firstName=addressBookDTO.getFirstName();
-        this.lastName=addressBookDTO.getLastName();
-        this.email=addressBookDTO.getEmail();
-        this.phoneNumber=addressBookDTO.getPhoneNumber();
-        this.city=addressBookDTO.getCity();
-        this.state=addressBookDTO.getState();
-        this.zip=addressBookDTO.getZip();
+        this.firstName=addressBookDTO.firstName;
+        this.lastName=addressBookDTO.lastName;
+        this.email=addressBookDTO.email;
+        this.phoneNumber=addressBookDTO.phoneNumber;
+        this.city=addressBookDTO.city;
+        this.state=addressBookDTO.state;
+        this.zip=addressBookDTO.zip;
     }
 }
