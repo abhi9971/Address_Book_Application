@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 @Slf4j
 @Service
 public class AddressBookService implements IAddressBookService {
@@ -36,7 +37,9 @@ public class AddressBookService implements IAddressBookService {
         AddressBookData newAddress = new AddressBookData(addressBookDTO);
         addressBookRepository.save(newAddress);
         String token = tokenUtility.createToken(newAddress.getId());
-        sender.sendEmail("abhishekrajawat101@gmail.com", "Test Email", "Registered SuccessFully, hii: "+newAddress.getFirstName()+"Please Click here to get data-> "+"http://localhost:8080/addressBook/retrieve/"+token);
+        sender.sendEmail("abhishekrajawat101@gmail.com", "Test Email", "Registered SuccessFully, hii: "
+                +newAddress.getFirstName()+"Please Click here to get data-> "
+                +"http://localhost:8080/addressBook/retrieve/"+token);
         return token;
     }
 

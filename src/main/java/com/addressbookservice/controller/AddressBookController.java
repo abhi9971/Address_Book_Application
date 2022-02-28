@@ -23,8 +23,6 @@ public class AddressBookController {
     private IAddressBookService addressBookService;
 
 
-
-
     /**
      * create record
      * @apiNote accepts the  data in JSON format and stores it in DB
@@ -58,14 +56,12 @@ public class AddressBookController {
      * get data for particular id
      * Ability to get a record by token
      */
-
     @GetMapping("/get/{token}")
     public ResponseEntity<String> getRecordById(@PathVariable String token) throws AddressBookException {
         AddressBookData newAddressBook = addressBookService.getRecordByToken(token);
         ResponseDTO dto = new ResponseDTO("Address Book Record for particular id retrieved successfully",newAddressBook);
         return new ResponseEntity(dto,HttpStatus.OK);
     }
-
 
 
     /**
