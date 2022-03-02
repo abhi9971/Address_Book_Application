@@ -37,18 +37,64 @@ public class AddressBookService implements IAddressBookService {
         AddressBookData newAddress = new AddressBookData(addressBookDTO);
         addressBookRepository.save(newAddress);
         String token = tokenUtility.createToken(newAddress.getId());
-        sender.sendEmail("abhishekrajawat101@gmail.com", "Test Email", "Registered SuccessFully, hii: "
+        sender.sendEmail(newAddress.getEmail(), "Test Email", "Registered SuccessFully, hii: "
                 +newAddress.getFirstName()+"Please Click here to get data-> "
                 +"http://localhost:8080/addressBook/retrieve/"+token);
         return token;
     }
 
 
+
+    /**
+     * accepts the contact data in the form of AddressBookDTO and
+     * updates the contact details having same Id from database
+     * @param token - represents contact details for same id
+     * @param addressBookDTO- represents object of AddressBookDTO class
+     * @return	updated Address Book information in JSON format
+     *Created service method which serves controller api to update record by token
+     */
+    public AddressBookData updateRecordByToken(String token, AddressBookDTO addressBookDTO) {
+        Integer id= tokenUtility.decodeToken(token);
+        Optional<AddressBookData> addressBook = addressBookRepository.findById(id);
+        if(addressBook.isEmpty()) {
+            throw new AddressBookException("Address Book Details for id not found");
+        }
+        AddressBookData newBook = new AddressBookData(id,addressBookDTO);
+        addressBookRepository.save(newBook);
+        sender.sendEmail(newBook.getEmail(), "Test Email", "Updated SuccessFully, hii: "
+                +newBook.getFirstName()+"Please Click here to get data of updated id-> "
+                +"http://localhost:8080/addressBook/retrieve/"+token);
+        return newBook;
+    }
+
+
+    /**accepts the contact Id and deletes the data of that contact from DB
+     * @param token - represents contact id
+     * @return Id and Acknowledgment message
+     */
+
+    public AddressBookData deleteRecordByToken(String token) {
+        Integer id = tokenUtility.decodeToken(token);
+        Optional<AddressBookData> addressBook = addressBookRepository.findById(id);
+        if(addressBook.isEmpty())
+        {
+            log.warn("Unable to find address book details for given id: "+id);
+            throw new AddressBookException("Address Book Details not found");
+        }
+        else {
+            addressBookRepository.deleteById(id);
+            sender.sendEmail("abhishekrajawat101@gmail.com", "Test Email", "Deleted SuccessFully, hii: "
+                    +addressBook.get()+"Please Click here to get data-> "
+                    +"http://localhost:8080/addressBook/retrieve/"+token);
+        }
+        return null;
+    }
     /**
      * getAll AddressBook list by token
      * @return list of contact information from DB by validating token first
      * @token :-represent id
      */
+
 
     public List<AddressBookData> getAddressBookDataByToken(String token)
     {
@@ -56,6 +102,9 @@ public class AddressBookService implements IAddressBookService {
         Optional<AddressBookData> isContactPresent=addressBookRepository.findById(id);
         if(isContactPresent.isPresent()) {
             List<AddressBookData> listAddressBook=addressBookRepository.findAll();
+            sender.sendEmail("abhishekrajawat101@gmail.com", "Test Email", "Get your data with this token, hii: "
+                    +isContactPresent.get().getEmail()+"Please Click here to get data-> "
+                    +"http://localhost:8080/addressBook/retrieve/"+token);
             return listAddressBook;
         }else {
             System.out.println("Exception ...Token not found!");
@@ -76,51 +125,22 @@ public class AddressBookService implements IAddressBookService {
             log.warn("Unable to find address book details for given id: "+id);
             throw new AddressBookException("Address Book Details not found for that particular id");
         }
-        return newAddressBook.get();
-    }
-
-
-
-
-    /**
-     * accepts the contact data in the form of AddressBookDTO and
-     * updates the contact details having same Id from database
-     * @param token - represents contact details for same id
-     * @param addressBookDTO- represents object of AddressBookDTO class
-     * @return	updated Address Book information in JSON format
-     *Created service method which serves controller api to update record by token
-     */
-    public AddressBookData updateRecordByToken(String token, AddressBookDTO addressBookDTO) {
-        Integer id= tokenUtility.decodeToken(token);
-        Optional<AddressBookData> addressBook = addressBookRepository.findById(id);
-        if(addressBook.isEmpty()) {
-            throw new AddressBookException("Address Book Details for id not found");
-        }
-        AddressBookData newBook = new AddressBookData(id,addressBookDTO);
-        addressBookRepository.save(newBook);
-        log.info("Address Book Data got updated for id: "+id);
-        return newBook;
-    }
-
-
-    /**accepts the contact Id and deletes the data of that contact from DB
-     * @param token - represents contact id
-     * @return Id and Acknowledgment message
-     */
-
-    public AddressBookData deleteRecordByToken(String token) {
-        Integer id = tokenUtility.decodeToken(token);
-        Optional<AddressBookData> addressBook = addressBookRepository.findById(id);
-        if(addressBook.isEmpty())
-        {
-            log.warn("Unable to find address book details for given id: "+id);
-            throw new AddressBookException("Address Book Details not found");
-        }
         else {
-            addressBookRepository.deleteById(id);
+            sender.sendEmail("abhishekrajawat101@gmail.com", "Test Email", "Deleted SuccessFully, hii: "
+                    +newAddressBook.get().getEmail()+"Please Click here to get data-> "
+                    +"http://localhost:8080/addressBook/retrieve/"+token);
+
+            return newAddressBook.get();
         }
-        return null;
+
     }
+
+
+
+
+
+
+
 
 }
 
